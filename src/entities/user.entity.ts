@@ -1,10 +1,4 @@
-import {
-  Entity,
-  Property,
-  PrimaryKey,
-  OneToMany,
-  Collection,
-} from '@mikro-orm/core';
+import { Entity, Property, PrimaryKey, OneToMany, Collection } from '@mikro-orm/core';
 import { Post } from './post.entity';
 
 @Entity({ tableName: 'users' })
