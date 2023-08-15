@@ -4,6 +4,8 @@ import { Controller } from '@nestjs/common';
 import { User } from '../entities/user.entity';
 import { AuthGuard } from '../auth/auth.guard';
 import { Post } from '../entities/post.entity';
+import { PostListDto } from '../dto/post.list.dto';
+import { UserListDto } from '../dto/user.list.dto';
 
 @Controller('users')
 export class UserController {
@@ -11,22 +13,17 @@ export class UserController {
 
   @Get()
   @UseGuards(AuthGuard)
-  async list(@Query() query: { page?: number; perPage?: number }) {
+  async list(@Query() query: UserListDto) {
     const page = Number(query.page ?? 1);
     const perPage = Number(query.perPage ?? 10);
 
     const [posts, count] = await this.em.findAndCount(User, {}, { limit: perPage, offset: (page - 1) * perPage });
 
-    return {
-      page,
-      perPage,
-      total: count,
-      items: posts,
-    };
+    return { page, perPage, total: count, items: posts };
   }
 
   @Get(':id/posts')
-  async listUserPosts(@Param('id') id: number, @Query() query: { page?: number; perPage?: number }) {
+  async listUserPosts(@Param('id') id: number, @Query() query: PostListDto) {
     const userId = Number(id);
 
     const page = Number(query.page ?? 1);
@@ -42,11 +39,6 @@ export class UserController {
       { limit: perPage, offset: (page - 1) * perPage },
     );
 
-    return {
-      page,
-      perPage,
-      total: count,
-      items: posts,
-    };
+    return { page, perPage, total: count, items: posts };
   }
 }

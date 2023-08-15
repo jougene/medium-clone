@@ -15,25 +15,21 @@ import { Request } from 'express';
 import { Post } from '../entities/post.entity';
 import { PostCreateDto } from '../dto/post.create.dto';
 import { AuthGuard } from '../auth/auth.guard';
-import { PostGetDto } from 'src/dto/post.get.dto';
+import { PostGetDto } from '../dto/post.get.dto';
+import { PostListDto } from '../dto/post.list.dto';
 
 @Controller('posts')
 export class PostController {
   constructor(private readonly em: EntityManager) {}
 
   @Get()
-  async list(@Query() query: { page?: number; perPage?: number }) {
+  async list(@Query() query: PostListDto) {
     const page = Number(query.page ?? 1);
     const perPage = Number(query.perPage ?? 10);
 
     const [posts, count] = await this.em.findAndCount(Post, {}, { limit: perPage, offset: (page - 1) * perPage });
 
-    return {
-      page,
-      perPage,
-      total: count,
-      items: posts,
-    };
+    return { page, perPage, total: count, items: posts };
   }
 
   @PostMethod()
@@ -54,6 +50,7 @@ export class PostController {
       id: post.id,
       title: post.title,
       content: post.content,
+      readingTime: post.readingTime,
     };
   }
 
@@ -67,6 +64,7 @@ export class PostController {
       id: post.id,
       title: post.title,
       content: post.content,
+      readingTime: post.readingTime,
     };
   }
 }
