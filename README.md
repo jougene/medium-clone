@@ -1,4 +1,4 @@
-# Medium clone test assignment
+# Medium clone
 
 ## Run
 - `npm install`
